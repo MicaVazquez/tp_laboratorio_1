@@ -44,7 +44,7 @@ int main(void)
         valorBitcoin= 4606954.55;
 		do
 		{
-			opcion = pedirEnteroPositivo("1-Ingresar kilometros\n2-Ingresar precio de vuelos \n3-Calcular todos los costos \n4-Informar resultados \n5-Carga forzada de datos\n6-Salir\n", "Error opcion no valida.\n");
+			opcion = pedirEnteroPositivo("1-Ingresar kilometros\n2-Ingresar precio de vuelos \n3-Calcular todos los costos \n4-Informar resultados \n5-Carga forzada de datos\n6-Salir\n", "Error, no ingreso una opcion correcta.\n");
 
 
 			switch(opcion)
@@ -171,7 +171,7 @@ int main(void)
 				break;
 
 				default:
-				printf("Error; no ingreso una opcion correcta\n");
+				printf("Error, no ingreso una opcion correcta\n");
 				break;
 
 			}
