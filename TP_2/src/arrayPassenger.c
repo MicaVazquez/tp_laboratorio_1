@@ -505,7 +505,7 @@ int mostrarPasajerosVueloActivo(ePasajero* list, int largo, eAvion* listaAviones
 			{
                 for(j=0;j<len;j++)//recorre array de aviones
                 {
-                	if(strcmp(list[i].codigoDeVuelo,listaAviones[j].IDcodigoDeVuelo)==0)
+                	if(stricmp(list[i].codigoDeVuelo,listaAviones[j].IDcodigoDeVuelo)==0)
                 	{
                       if(listaAviones[j].estadoDeVuelo == ACTIVO)
                       {

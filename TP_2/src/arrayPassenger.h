@@ -232,48 +232,60 @@ void informar(ePasajero* pasajeros, int lenP, eAvion* aviones, int lenA);
 int DarDeAlta(ePasajero* list, int lenP, eAvion* listaAviones,int lenA);
 
 /**
- * @brief
+ * @brief la funcion permite ingresar un codigo de vuelo nuevo
  *
  * @param listaA Array de aviones
  * @param lenA tam array de aviones
- * @return
+ * @return  devuelve 1 se se cargo uno nuevo y -2 si no.
  */
 int altaVuelos(eAvion* listaA,int lenA);
 
 /**
- * @brief
+ * @brief busca un lugar libre en el campo de codigo de vuelo
  *
- * @param list
- * @param len
- * @return
+ * @param list lista array avion
+ * @param len longitud
+ * @return retorno -1 si no hay espacio sino retorna la posicion libre
  */
 int buscarLibreCodigoVuelo(eAvion* list, int len);
 
 /**
- * @brief
+ * @brief inicializa el isEmpthy de la estructura eAvion es Libre
  *
- * @param listA
- * @param lenA
+ * @param listA array aviones
+ * @param lenA  longitud
  */
 void inicializarCodigosVuelos(eAvion* listA, int lenA);
 
 
 /**
- * @brief
+ * @brief la funcion impide que se ingrese un codigo de vuelo existente
  *
- * @param listaAv
- * @param lenA
+ * @param listaAv array
+ * @param lenA   longitud
  * @param input
- * @return
+ * @return retorna 0 si no es igual el nuevo codigo a los que ya existen y 1 si es igual
  */
 int buscarRepetido(eAvion* listaAv, int lenA,char* input);
 
 
 
-
+/**
+ * @brief la funcion modifica el estado de vuelo
+ *
+ * @param listaAviones array
+ * @param lenA longiud
+ */
 void modificarEstadoVuelo(eAvion* listaAviones,int lenA);
 
 
-
+/**
+ * @brief la funcion da la opcion de modificar un pasajero o un estado de vuelo
+ *
+ * @param list array pasajeros
+ * @param lenP longitud del array pasajeros
+ * @param listaAviones array aviones
+ * @param lenA longitud del array aviones
+ */
 void menuModificar(ePasajero* list, int lenP, eAvion* listaAviones,int lenA);
 #endif /* ARRAYPASSENGER_H_ */

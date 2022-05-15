@@ -17,8 +17,8 @@
 
 
 
-#define CANT 10
-#define MAX_CANT 10
+#define CANT 2000
+#define MAX_CANT 30
 int main(void)
 {
     setbuf(stdout,NULL);
