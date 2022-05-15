@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : TP_2.c
- Author      : Micaela
+ Author      : Micaela Vazquez 1-K DIV K
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
@@ -18,7 +18,7 @@
 
 
 #define CANT 2000
-#define MAX_CANT 30
+#define MAX_CANT 50
 int main(void)
 {
     setbuf(stdout,NULL);
