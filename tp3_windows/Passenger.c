@@ -23,10 +23,12 @@ Passenger* Passenger_newParametros(char* idStr,char* nombreStr,char* apellidoStr
 {
      Passenger *  unPasajero = Passenger_new();
      int tipoPasajeroInt;
+     int estadoVueloInt;
 
      if(unPasajero != NULL && idStr != NULL && nombreStr != NULL && apellidoStr != NULL && precioStr != NULL && tipoPasajeroStr != NULL && codigoVueloStr != NULL && estadoVueloStr != NULL)
      {
         tipoPasajeroInt = Passenger_changeTypeP(tipoPasajeroStr);//asigna un numero al tipo
+        estadoVueloInt =  Passenger_changeStatusFlight(estadoVueloStr);
 
         if(Passenger_setId(unPasajero, atoi(idStr)) == -1 ||
         		Passenger_setNombre(unPasajero, nombreStr) == -1 ||
@@ -34,7 +36,7 @@ Passenger* Passenger_newParametros(char* idStr,char* nombreStr,char* apellidoStr
 				Passenger_setPrecio(unPasajero, atof(precioStr)) == -1||
 				Passenger_setTipoPasajero(unPasajero,tipoPasajeroInt) == -1||
 				Passenger_setCodigoVuelo(unPasajero, codigoVueloStr) == -1||
-				Passenger_setStatusFlight(unPasajero, estadoVueloStr) == -1)
+				Passenger_setStatusFlight(unPasajero, estadoVueloInt) == -1)
                {
         	       Passenger_delete(unPasajero);
                }
@@ -203,24 +205,24 @@ int Passenger_getPrecio(Passenger* this,float* precio)
 	  return retorno;
 }
 
-int Passenger_setStatusFlight(Passenger* this,char* estado)
+int Passenger_setStatusFlight(Passenger* this,int estado)
 {
 	int retorno =-1;
 
-	if(this != NULL && estado != NULL)
+	if(this != NULL && estado >= 0)
 	{
-		strcpy(this->estado,estado);
+		this->estado = estado;
 		retorno = 0;
 	}
 	return retorno;
 }
-int Passenger_getStatusFlight(Passenger* this,char* estado)
+int Passenger_getStatusFlight(Passenger* this,int* estado)
 {
 	int retorno = -1;
 
-	if(this!= NULL && estado != NULL)
+	if(this!= NULL && estado >= 0)
 	{
-		strcpy(estado,this->estado);
+		*estado = this->estado;
 		retorno = 0;
 	}
 	return retorno;
@@ -251,6 +253,35 @@ int Passenger_changeTypeP(char* tipoPasajero)
 	return typePassengerInt;
 }
 
+int Passenger_changeStatusFlight(char* estadoVuelo)
+{
+	int statusFlightInt;
+
+	if(strcmp(estadoVuelo,"En Horario")==0)
+	{
+		statusFlightInt = 1;
+	}
+	else
+	{
+	    if(strcmp(estadoVuelo,"Demorado")==0)
+		{
+			statusFlightInt = 2;
+		}
+		else
+		{
+			if(strcmp(estadoVuelo,"En Vuelo")==0)
+			{
+				statusFlightInt = 3;
+			}
+			else if(strcmp(estadoVuelo,"Aterrizado")==0)
+			{
+				statusFlightInt = 4;
+			}
+		}
+	}
+	return statusFlightInt;
+}
+
 void Passenger_printOne(Passenger* unPasajero)
 {
 	int id;
@@ -259,8 +290,9 @@ void Passenger_printOne(Passenger* unPasajero)
 	float precio;
 	int tipoPasajero;
 	char codigoVuelo[100];
-	char estado[50];
-	char types[][50]={"FirstClass","ExecutiveClass","EconomyClass"};
+	int estado;
+	char types[3][50]={"FirstClass","ExecutiveClass","EconomyClass"};
+	char statusFlight[4][100]={"En Horario","Demorado","En Vuelo","Aterrizado"};
 
 	Passenger_getId(unPasajero, &id);
 	Passenger_getNombre(unPasajero, nombre);
@@ -268,10 +300,60 @@ void Passenger_printOne(Passenger* unPasajero)
 	Passenger_getPrecio(unPasajero, &precio);
 	Passenger_getTipoPasajero(unPasajero, &tipoPasajero);
 	Passenger_getCodigoVuelo(unPasajero, codigoVuelo);
-	Passenger_getStatusFlight(unPasajero, estado);
+	Passenger_getStatusFlight(unPasajero, &estado);
 
 
-    printf("%d %s %s %.2f %s %s %s\n\n", id ,nombre, apellido,precio,types[tipoPasajero-1],codigoVuelo, estado);
+	printf("\n%-5d%-15s%-15s%-10.2f%-17s%-16s%15s\n", id ,nombre, apellido,precio,types[tipoPasajero-1],codigoVuelo, statusFlight[estado-1]);
 }
 
+int Passenger_sortName(void* p1,void*p2)
+{
+	char name1[50];
+	char name2[50];
+	int rtn;
 
+	Passenger* pasajero1 = (Passenger*)p1;
+	Passenger* pasajero2 = (Passenger*)p2;
+
+	if(pasajero1 != NULL && pasajero2 != NULL)
+	{
+       Passenger_getNombre(pasajero1, name1);
+       Passenger_getNombre(pasajero2, name2);
+
+       rtn =stricmp(name1,name2);
+	}
+
+	return rtn;
+}
+
+int Passenger_sortPrice(void* p1,void* p2)
+{
+	int retorno;
+	float precio1=0;
+	float precio2=0;
+
+	    Passenger* pasajero1 = (Passenger*)p1;
+	    Passenger* pasajero2 = (Passenger*)p2;
+
+	    if(pasajero1!=NULL && pasajero2!=NULL)
+	    {
+	        Passenger_getPrecio(pasajero1, &precio1);
+	        Passenger_getPrecio(pasajero2, &precio2);
+
+
+	       if(precio1>precio2)
+	       {
+	           retorno = 1;
+	       }
+	       else if(precio1<precio2)
+	       {
+	           retorno = -1;
+	       }
+	       else
+	       {
+	           retorno = 0;
+	       }
+
+	    }
+	return retorno;
+}

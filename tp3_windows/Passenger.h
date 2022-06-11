@@ -16,7 +16,7 @@ typedef struct
 	float precio;
 	int tipoPasajero;
 	char codigoVuelo[100];
-	char estado[50];
+	int estado;
 
 }Passenger;
 
@@ -48,7 +48,7 @@ int Passenger_getPrecio(Passenger* this,float* precio);
  * @param estado
  * @return retorna el estado de vuelo validado
  */
-int Passenger_setStatusFlight(Passenger* this,char* estado);
+int Passenger_setStatusFlight(Passenger* this,int estado);
 
 /**
  * @brief devuelve una copia del dato que se encuentra en el campo estado
@@ -57,7 +57,7 @@ int Passenger_setStatusFlight(Passenger* this,char* estado);
  * @param estado
  * @return devuelve el dato para ser imprimido
  */
-int Passenger_getStatusFlight(Passenger* this,char* estado);
+int Passenger_getStatusFlight(Passenger* this,int* estado);
 
 /**
  * @brief le asigna al tipo de pasajero string un valor numerico
@@ -66,6 +66,34 @@ int Passenger_getStatusFlight(Passenger* this,char* estado);
  * @return retorna un entero
  */
 int Passenger_changeTypeP(char* tipoPasajero);
+/**
+ * @brief imprime un pasajero por consola
+ *
+ * @param unPasajero
+ */
 void Passenger_printOne(Passenger* unPasajero);
+/**
+ * @brief ordenar ppr nombre
+ *
+ * @param p1 un pasajero
+ * @param p2 otro pasajero
+ * @return retorna comparacion
+ */
+int Passenger_sortName(void* p1,void*p2);
+/**
+ * @brief ordenar por precio
+ *
+ * @param p1
+ * @param p2
+ * @return retorna comparacion ( 1 si el primer precio es mayor al segundo precio y 0 si es al reves)
+ */
+int Passenger_sortPrice(void* p1,void* p2);
+/**
+ * @brief
+ *
+ * @param estadoVuelo
+ * @return
+ */
+int Passenger_changeStatusFlight(char* estadoVuelo);
 
 #endif /* PASSENGER_H_ */

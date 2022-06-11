@@ -8,7 +8,7 @@
 #include "Controller.h"
 #include <ctype.h>
 
-static int idIncremental = 0;
+static int idIncremental = 1001;
 static int Passenger_obtenerID();
 static int Passenger_obtenerID()
 {
@@ -25,6 +25,7 @@ static int Passenger_obtenerID()
 int controller_loadFromText(char* path , LinkedList* pArrayListPassenger)
 {
   FILE* pFile;
+  int exito = 0;
 
 	  if(path != NULL && pArrayListPassenger != NULL)
 	  {
@@ -33,15 +34,16 @@ int controller_loadFromText(char* path , LinkedList* pArrayListPassenger)
 		  if(pFile != NULL)
 		  {
 			  parser_PassengerFromText(pFile, pArrayListPassenger);//pide pArchivo y la linkedList
+			  exito = 1;
 		  }
 		  else
 		  {
-			  printf("No se pudo abrir el archivo");
+			  printf("\nNo se pudo abrir el archivo...");
 		  }
 
 		  fclose(pFile);
 	  }
-    return 1;
+    return exito;
 }
 
 /** \brief Carga los datos de los pasajeros desde el archivo data.csv (modo binario).
@@ -53,7 +55,25 @@ int controller_loadFromText(char* path , LinkedList* pArrayListPassenger)
  */
 int controller_loadFromBinary(char* path , LinkedList* pArrayListPassenger)
 {
-    return 1;
+	FILE* pFile;
+	int exito = 0;
+
+	if(path != NULL && pArrayListPassenger != NULL)
+	{
+		pFile = fopen(path,"rb");
+
+		if(pFile != NULL)
+		{
+			parser_PassengerFromBinary(pFile,pArrayListPassenger);
+			exito = 1;
+		}
+		else
+		{
+
+			printf("\nError al leer el archivo\n");
+		}
+	}
+    return exito;
 }
 
 /** \brief Alta de pasajero
@@ -73,12 +93,12 @@ int controller_addPassenger(LinkedList* pArrayListPassenger)
    float precio;
    int tipoPasajero;
    char codigoVuelo[100];
-   char estado[100];
+   int estado;
    int opcion;
    int exito = 0;
 
    char codeFlight[8][100]={"MM0987B","BA2491A","IB08004","BR3456J","FR5678G","HY4567D","GU2345F","TU6789B"};
-   char statusFlight[8][100]={"En Horario","Aterrizado","Aterrizado","Demorado","En Horario","Demorado","En Vuelo","Aterrizado"};
+   int statusFlight[8]={1,4,4,2,1,2,3,4};
 
 
  if(unPasajero != NULL)
@@ -97,7 +117,7 @@ int controller_addPassenger(LinkedList* pArrayListPassenger)
 
 	 strcpy(codigoVuelo,codeFlight[opcion-1]);
 
-	 strcpy(estado,statusFlight[opcion-1]);
+	 estado = statusFlight[opcion-1];
 
 	 printf("\nElija un tipo de pasajero\n 1. FirstClass\n 2. ExecutiveClass\n 3. EconomyClass");
 
@@ -143,14 +163,15 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 	int rtn = 0;
 
 	char codeFlight[8][100]={"MM0987B","BA2491A","IB08004","BR3456J","FR5678G","HY4567D","GU2345F","TU6789B"};
-	char statusFlight[8][100]={"En Horario","Aterrizado","Aterrizado","Demorado","En Horario","Demorado","En Vuelo","Aterrizado"};
+	//char statusFlight[8][100]={"En Horario","Aterrizado","Aterrizado","Demorado","En Horario","Demorado","En Vuelo","Aterrizado"};
+	int statusFlight[8]={1,4,4,2,1,2,3,4};
 
 	char nombre[50];
 	char apellido[50];
 	float precio;
 	int tipoPasajero;
 	char codigoVuelo[100];
-	char estado[50];
+	int estado;
 	int option;
 
 	controller_ListPassenger(pArrayListPassenger);
@@ -172,7 +193,7 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 
     if(flag==1)
     {
-    	 printf("id      name       lastname     price      flycode       typePassenger        statusFlight\n");
+    	printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo   Tipo de Pasajero\n");
     			   //mostar el pasajero con sus datos
     			   Passenger_printOne(auxPasajero);
 	   do
@@ -200,7 +221,7 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 				   printf("\nElija un codigo de vuelo:\n1-MM0987B\n2-BA2491A\n3-IB08004\n4-BR3456J\n5-FR5678G\n6-HY4567D\n7-GU2345F\n8-TU6789B\n");
                    getInt("\nOpcion: ",&opcionCodigoVuelo,1,8);
                    strcpy(codigoVuelo,codeFlight[opcionCodigoVuelo-1]);
-                   strcpy(estado,statusFlight[opcionCodigoVuelo-1]);
+                   estado = statusFlight[opcionCodigoVuelo-1];
                    Passenger_setCodigoVuelo(auxPasajero, codigoVuelo);
                    Passenger_setStatusFlight(auxPasajero, estado);
                    rtn = 1;
@@ -244,7 +265,7 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 
 	controller_ListPassenger(pArrayListPassenger);
 
-		getInt("\nIngrese en id del pasajero a modificar: ", &id, 1, tam);
+		getInt("\nIngrese en id del pasajero a dar de baja: ", &id, 1, tam);
 
 		for(i=0;i<tam;i++)
 		{
@@ -260,9 +281,8 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 		}
 
 		if(flag == 1)
-		{
+		{   printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo   Tipo de Pasajero\n");
 			Passenger_printOne(auxPasajero);
-			printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo   Tipo de Pasajero\n");
 
 			printf("Dar de baja? [S|N]: ");
 			fflush(stdin);
@@ -297,11 +317,30 @@ int controller_ListPassenger(LinkedList* pArrayListPassenger)
 	int cantidad = ll_len(pArrayListPassenger);
 	int i;
 
+	printf("\nID   Nombre       Apellido    Precio    Tipo de Pasajero  Codigo de Vuelo    Estado de vuelo\n");
 
 	for(i=0;i<cantidad;i++)
 	{
 		p = (Passenger*) ll_get(pArrayListPassenger,i);
 		Passenger_printOne(p);
+
+
+		if(i == 200)
+		{
+			system("pause");
+		}
+		if(i == 400)
+		{
+			system("pause");
+		}
+		if(i == 600)
+		{
+			system("pause");
+		}
+		if(i == 800)
+		{
+			system("pause");
+		}
 	}
     return 1;
 }
@@ -315,6 +354,30 @@ int controller_ListPassenger(LinkedList* pArrayListPassenger)
  */
 int controller_sortPassenger(LinkedList* pArrayListPassenger)
 {
+	int option;
+	int orden;
+
+	getInt("\nOrdenar por: 1.Nombre 2.Precio. Opcion: ", &option, 1, 2);
+
+    switch(option)
+    {
+      case 1:
+          getNumero(&orden, "\nOrden...0.Descendente 1.Ascendente. Opcion: ", "Error.", 0, 1);
+    	  printf("\nOrdenando...espere un momento por favor.\n\n");
+
+          ll_sort(pArrayListPassenger, Passenger_sortName, orden);
+
+    	  printf("Ordenamiento terminado\n");
+    	  break;
+      case 2:
+    	  getNumero(&orden, "\nOrden...0.Descendente 1.Ascendente. Opcion: ", "Error.", 0, 1);
+    	  printf("\nOrdenando...espere un momento por favor.\n\n");
+
+    	  ll_sort(pArrayListPassenger, Passenger_sortPrice, orden);
+
+    	  printf("Ordenamiento terminado\n");
+    	  break;
+    }
 
     return 1;
 }
@@ -328,7 +391,54 @@ int controller_sortPassenger(LinkedList* pArrayListPassenger)
  */
 int controller_saveAsText(char* path , LinkedList* pArrayListPassenger)
 {
-    return 1;
+	FILE* pFile;
+
+	Passenger* unPasajero;
+
+	int exito = 0;
+
+	int i;
+	int id;
+	char nombre[50];
+	char apellido[50];
+	float precio;
+	int tipoPasajero;
+	char codigoVuelo[100];
+	int estado;
+	char types[3][50]={"FirstClass","ExecutiveClass","EconomyClass"};
+	char statusFlight[4][100]={"En Horario","Demorado","En Vuelo","Aterrizado"};
+
+
+	pFile = fopen(path,"w");
+
+	if(pFile != NULL)
+	{
+      fprintf(pFile,"id,name,lastname,price,flycode,typePassenger,statusFlight\n");
+
+      for(i=0;i<ll_len(pArrayListPassenger);i++)
+      {
+    	  unPasajero = ll_get(pArrayListPassenger, i);
+
+    	  Passenger_getId(unPasajero, &id);
+    	  Passenger_getNombre(unPasajero, nombre);
+    	  Passenger_getApellido(unPasajero, apellido);
+    	  Passenger_getPrecio(unPasajero, &precio);
+    	  Passenger_getTipoPasajero(unPasajero, &tipoPasajero);
+    	  Passenger_getCodigoVuelo(unPasajero, codigoVuelo);
+    	  Passenger_getStatusFlight(unPasajero, &estado);
+
+
+    	  fprintf(pFile,"%d,%s,%s,%.0f,%s,%s,%s\n", id ,nombre, apellido,precio,codigoVuelo,types[tipoPasajero-1],statusFlight[estado-1]);
+      }
+      printf("Datos guardados en modo texto!!!\n");
+      fclose(pFile);
+      exito = 1;
+	}
+	else
+	{
+		printf("\nNo se pudo abrir el archivo...");
+	}
+    return exito;
 }
 
 /** \brief Guarda los datos de los pasajeros en el archivo data.csv (modo binario).
@@ -340,6 +450,34 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger)
  */
 int controller_saveAsBinary(char* path , LinkedList* pArrayListPassenger)
 {
-    return 1;
+	FILE* pFile;
+	Passenger* unPasajero;
+
+	int i;
+	int tam;
+	int exito = 0;
+
+	pFile = fopen(path,"wb");
+
+	if(pFile != NULL)
+	{
+		tam = ll_len(pArrayListPassenger);
+
+		for(i=0;i<tam;i++)
+		{
+			unPasajero = (Passenger*)ll_get(pArrayListPassenger, i);
+			fwrite(unPasajero,sizeof(Passenger),1,pFile);
+		}
+
+		printf("Datos guardados en modo binario!!!\n");
+		fclose(pFile);
+		exito = 1;
+	}
+	else
+	{
+		printf("\nNo se pudo abrir el archivo...");
+	}
+
+    return exito;
 }
 

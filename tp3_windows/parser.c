@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "LinkedList.h"
 #include "Passenger.h"
 
@@ -30,6 +31,7 @@ int parser_PassengerFromText(FILE* pFile , LinkedList* pArrayListPassenger)
 
 	     if(cant == 7)
 	     {
+
            unPasajero = Passenger_newParametros(id, nombre, apellido, precio, tipoPasajero, codigoVuelo,estadoVuelo);
 
            if(unPasajero != NULL)
@@ -51,6 +53,28 @@ int parser_PassengerFromText(FILE* pFile , LinkedList* pArrayListPassenger)
  */
 int parser_PassengerFromBinary(FILE* pFile , LinkedList* pArrayListPassenger)
 {
+	Passenger* unPasajero;
+	Passenger auxPasajero;
+    int i = 0;
+
+	while(!feof(pFile))
+	{
+		unPasajero = Passenger_new();
+		fread(&auxPasajero,sizeof(Passenger),1,pFile);
+
+		Passenger_setId(unPasajero, auxPasajero.id);
+		Passenger_setNombre(unPasajero, auxPasajero.nombre);
+		Passenger_setApellido(unPasajero, auxPasajero.apellido);
+		Passenger_setPrecio(unPasajero, auxPasajero.precio);
+		Passenger_setTipoPasajero(unPasajero, auxPasajero.tipoPasajero);
+		Passenger_setCodigoVuelo(unPasajero, auxPasajero.codigoVuelo);
+		Passenger_setStatusFlight(unPasajero, auxPasajero.estado);
+
+       ll_add(pArrayListPassenger,unPasajero);
+       i++;
+
+	}
+	printf("\n Cantidad de iteraciones: %d",i);
 
     return 1;
 }

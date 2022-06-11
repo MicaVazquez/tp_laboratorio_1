@@ -26,41 +26,116 @@ int main()
 {
 	setbuf(stdout,NULL);
     int option;
+    int flagText = 0;
+   int flagSave = 0;
 
     LinkedList* listaPasajeros = ll_newLinkedList();
     do{
-    	getInt("MENU:\n1.Cargar datos de pasajeros desde el archivo-modo texto.\n2.Cargar datos de pasajero desde el archivo-modo binario\n3.Alta de pasajero\n4.Modificar datos de pasajeros.\n5.Baja de pasajeros\n6.Listar pasajeros\n7.Ordenar pasajeros\n8.Guardar datos(modo texto)\n9.Guardar datos(modo binario)\n10.Salir\n Opcion: ", &option, 1, 10);
+    	getInt("\nMENU:\n1.Cargar datos de pasajeros desde el archivo-modo texto.\n2.Cargar datos de pasajero desde el archivo-modo binario\n3.Alta de pasajero\n4.Modificar datos de pasajeros.\n5.Baja de pasajeros\n6.Listar pasajeros\n7.Ordenar pasajeros\n8.Guardar datos(modo texto)\n9.Guardar datos(modo binario)\n10.Salir\n Opcion: ", &option, 1, 10);
         switch(option)
         {
             case 1:
-                controller_loadFromText("data.csv",listaPasajeros);
-                //system("pause");
+            	if(flagText == 0)
+            	{
+					if(controller_loadFromText("data.csv",listaPasajeros)==1)
+					{
+						printf("\nSe cargo el archivo exitosamente!!!");
+						flagText = 1;
+					}
+            	}
+            	else
+            	{
+            		printf("\nEl archivo ya fue cargado...");
+            	}
                 break;
             case 2:
+            	if(controller_loadFromBinary("data.bin", listaPasajeros)==1)
+            	{
+            		printf("\nSe cargo el archivo exitosamente!!!");
+            	}
             	break;
             case 3:
-            	controller_addPassenger(listaPasajeros);
+            	if(controller_addPassenger(listaPasajeros)==1)
+            	{
+            		printf("\nSe cargo el pasajero exitosamente!!!");
+            	}
+            	else
+            	{
+            		printf("\nError.No se pudo cargar el pasajero...");
+            	}
+            	//controller_ListPassenger(listaPasajeros);
             	break;
             case 4:
-            	controller_editPassenger(listaPasajeros);
+            	if(ll_len(listaPasajeros))
+            	{
+            		controller_editPassenger(listaPasajeros);
+            		//controller_ListPassenger(listaPasajeros);
+            	}
+            	else
+            	{
+            		printf("\nNo se han ingresado pasajeros aun...");
+            	}
             	break;
             case 5:
             	// baja
-            	controller_removePassenger(listaPasajeros);
+            	if(ll_len(listaPasajeros))
+            	{
+            		controller_removePassenger(listaPasajeros);
+            		//controller_ListPassenger(listaPasajeros);
+            	}
+            	else
+            	{
+            		printf("\nNo se han ingresado pasajeros aun...");
+            	}
             	break;
             case 6://listar
-            	controller_ListPassenger(listaPasajeros);
+            	if(ll_len(listaPasajeros))
+            	{
+            		controller_ListPassenger(listaPasajeros);
+            	}
+            	else
+            	{
+            		printf("\nNo se han ingresado pasajeros aun...");
+            	}
             	break;
             case 7://ordenar
+            	if(ll_len(listaPasajeros))
+            	{
+            		controller_sortPassenger(listaPasajeros);
+            	}
+            	else
+            	{
+            		printf("\nNo se han ingresado pasajeros aun...");
+            	}
             	break;
             case 8://guardar
+            	if(flagText == 1)
+            	{
+            	   if(controller_saveAsText("data.csv", listaPasajeros)==1)
+            	   {
+                         flagSave = 1;// se guardo
+            	   }
+            	}
+            	else
+            	{
+            		printf("\nPrimero debe cargar el archivo antes de guardar.");
+            	}
             	break;
             case 9://guardar
+            	controller_saveAsBinary("data.bin", listaPasajeros);
             	break;
-            case 10://salir
+            case 10:
+            	if(flagSave == 1)
+            	{
+            		printf("\nChau!");
+            	}
+            	else
+            	{
+            		printf("\nPrimero debe guardar un archivo...");
+            	}
             	break;
         }
-    }while(option != 10);
+    }while(option != 10 && flagSave == 0);
     return 0;
 }
 
