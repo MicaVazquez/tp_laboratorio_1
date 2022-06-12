@@ -8,12 +8,12 @@
 #include "Controller.h"
 #include <ctype.h>
 
-static int idIncremental = 1001;
+/*static int idIncremental = 1001;
 static int Passenger_obtenerID();
 static int Passenger_obtenerID()
 {
 	return idIncremental++;
-}
+}*/
 
 /** \brief Carga los datos de los pasajeros desde el archivo data.csv (modo texto).
  *
@@ -87,6 +87,7 @@ int controller_addPassenger(LinkedList* pArrayListPassenger)
 {
    Passenger* unPasajero = Passenger_new();
 
+
    int id;
    char nombre[50];
    char apellido[50];
@@ -97,14 +98,19 @@ int controller_addPassenger(LinkedList* pArrayListPassenger)
    int opcion;
    int exito = 0;
 
+   char idMax[100];
+
    char codeFlight[8][100]={"MM0987B","BA2491A","IB08004","BR3456J","FR5678G","HY4567D","GU2345F","TU6789B"};
    int statusFlight[8]={1,4,4,2,1,2,3,4};
+
+    Passenger_LastId(idMax);
+
+    id = atoi(idMax);
 
 
  if(unPasajero != NULL)
  {
-
-	 id = Passenger_obtenerID();
+	// id = Passenger_obtenerID();
 
 	 getString("\nIngrese un nombre: ",nombre,1,51);
 	 getString("\nIngrese un apellido: ",apellido,1,51);
@@ -124,7 +130,7 @@ int controller_addPassenger(LinkedList* pArrayListPassenger)
 	 getInt("\nOpcion: ",&tipoPasajero,1,3);
 
 
-	 if(Passenger_setId(unPasajero, id) == -1 ||
+	 if(Passenger_setId(unPasajero, id+1) == -1 ||
 			 Passenger_setNombre(unPasajero, nombre) == -1 ||
 			 Passenger_setApellido(unPasajero, apellido) == -1||
 			 Passenger_setPrecio(unPasajero, precio) == -1||
@@ -163,7 +169,6 @@ int controller_editPassenger(LinkedList* pArrayListPassenger)
 	int rtn = 0;
 
 	char codeFlight[8][100]={"MM0987B","BA2491A","IB08004","BR3456J","FR5678G","HY4567D","GU2345F","TU6789B"};
-	//char statusFlight[8][100]={"En Horario","Aterrizado","Aterrizado","Demorado","En Horario","Demorado","En Vuelo","Aterrizado"};
 	int statusFlight[8]={1,4,4,2,1,2,3,4};
 
 	char nombre[50];
@@ -281,7 +286,8 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 		}
 
 		if(flag == 1)
-		{   printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo   Tipo de Pasajero\n");
+		{
+			printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo        Tipo de Pasajero\n");
 			Passenger_printOne(auxPasajero);
 
 			printf("Dar de baja? [S|N]: ");
@@ -399,6 +405,7 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger)
 
 	int i;
 	int id;
+	int idMax;
 	char nombre[50];
 	char apellido[50];
 	float precio;
@@ -409,7 +416,8 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger)
 	char statusFlight[4][100]={"En Horario","Demorado","En Vuelo","Aterrizado"};
 
 
-	pFile = fopen(path,"w");
+	pFile = fopen(path,"w");//abre en modo escritura
+
 
 	if(pFile != NULL)
 	{
@@ -432,6 +440,11 @@ int controller_saveAsText(char* path , LinkedList* pArrayListPassenger)
       }
       printf("Datos guardados en modo texto!!!\n");
       fclose(pFile);
+
+      idMax = Passenger_buscarIdMax(pArrayListPassenger);//busca el mayor id del archivo
+
+      Passenger_saveLastId(idMax);
+
       exito = 1;
 	}
 	else

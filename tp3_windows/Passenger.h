@@ -7,6 +7,7 @@
 
 #ifndef PASSENGER_H_
 #define PASSENGER_H_
+#include "LinkedList.h"
 
 typedef struct
 {
@@ -95,5 +96,11 @@ int Passenger_sortPrice(void* p1,void* p2);
  * @return
  */
 int Passenger_changeStatusFlight(char* estadoVuelo);
+
+int Passenger_LastId(char* id);
+
+int Passenger_buscarIdMax(LinkedList* pArrayListPassenger);
+
+int Passenger_saveLastId(int lastId);
 
 #endif /* PASSENGER_H_ */

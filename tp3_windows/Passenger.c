@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Passenger.h"
+#include "LinkedList.h"
 
 Passenger* Passenger_new()
 {
@@ -356,4 +357,61 @@ int Passenger_sortPrice(void* p1,void* p2)
 
 	    }
 	return retorno;
+}
+
+int Passenger_LastId(char* id)
+{
+
+    int exito = 0;
+
+	 FILE* pFile;
+
+	   pFile = fopen("lastId.csv","r");
+
+	   if(pFile != NULL)
+	   {
+	      fscanf(pFile,"%[^\n]\n",id);
+
+          exito = 1;
+	   }
+      fclose(pFile);
+
+return exito;
+}
+
+
+int Passenger_buscarIdMax(LinkedList* pArrayListPassenger)
+{
+	int i;
+	int tam=ll_len(pArrayListPassenger);
+	int idMax=0;
+	Passenger* auxPasajero;
+
+	for(i=0;i<tam;i++)
+	{
+		auxPasajero=(Passenger*)ll_get(pArrayListPassenger,i);
+
+		if(auxPasajero->id>idMax)
+		{
+			idMax=auxPasajero->id;
+		}
+	}
+
+	return idMax;
+}
+
+int Passenger_saveLastId(int lastId)
+{
+	int rtn = 0;
+	 FILE* pFile;
+
+	   pFile = fopen("lastId.csv","w");
+
+	   if(pFile != NULL)
+	   {
+	      fprintf(pFile,"%d\n",lastId);
+	       rtn = 1;
+	   }
+
+return rtn;
 }

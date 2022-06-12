@@ -25,9 +25,12 @@
 int main()
 {
 	setbuf(stdout,NULL);
-    int option;
-    int flagText = 0;
-   int flagSave = 0;
+	int option;
+	int flagText = 0;
+	int flagBinary = 0;
+	int flagSaveText = 0;
+	int flagSaveBinary = 0;
+
 
     LinkedList* listaPasajeros = ll_newLinkedList();
     do{
@@ -48,12 +51,22 @@ int main()
             		printf("\nEl archivo ya fue cargado...");
             	}
                 break;
+
             case 2:
-            	if(controller_loadFromBinary("data.bin", listaPasajeros)==1)
+            	if(flagBinary == 0)
             	{
-            		printf("\nSe cargo el archivo exitosamente!!!");
+					if(controller_loadFromBinary("data.bin", listaPasajeros)==1)
+					{
+						printf("\nSe cargo el archivo exitosamente!!!");
+						flagBinary = 1;
+					}
+            	}
+            	else
+            	{
+            		printf("\nEl archivo ya fue cargado...");
             	}
             	break;
+
             case 3:
             	if(controller_addPassenger(listaPasajeros)==1)
             	{
@@ -63,32 +76,31 @@ int main()
             	{
             		printf("\nError.No se pudo cargar el pasajero...");
             	}
-            	//controller_ListPassenger(listaPasajeros);
             	break;
+
             case 4:
             	if(ll_len(listaPasajeros))
             	{
             		controller_editPassenger(listaPasajeros);
-            		//controller_ListPassenger(listaPasajeros);
             	}
             	else
             	{
             		printf("\nNo se han ingresado pasajeros aun...");
             	}
             	break;
+
             case 5:
-            	// baja
             	if(ll_len(listaPasajeros))
             	{
             		controller_removePassenger(listaPasajeros);
-            		//controller_ListPassenger(listaPasajeros);
             	}
             	else
             	{
             		printf("\nNo se han ingresado pasajeros aun...");
             	}
             	break;
-            case 6://listar
+
+            case 6:
             	if(ll_len(listaPasajeros))
             	{
             		controller_ListPassenger(listaPasajeros);
@@ -98,7 +110,8 @@ int main()
             		printf("\nNo se han ingresado pasajeros aun...");
             	}
             	break;
-            case 7://ordenar
+
+            case 7:
             	if(ll_len(listaPasajeros))
             	{
             		controller_sortPassenger(listaPasajeros);
@@ -108,12 +121,13 @@ int main()
             		printf("\nNo se han ingresado pasajeros aun...");
             	}
             	break;
+
             case 8://guardar
-            	if(flagText == 1)
+            	if(flagText || flagBinary)
             	{
             	   if(controller_saveAsText("data.csv", listaPasajeros)==1)
             	   {
-                         flagSave = 1;// se guardo
+                         flagSaveText = 1;// se guardo
             	   }
             	}
             	else
@@ -121,21 +135,33 @@ int main()
             		printf("\nPrimero debe cargar el archivo antes de guardar.");
             	}
             	break;
+
             case 9://guardar
-            	controller_saveAsBinary("data.bin", listaPasajeros);
+            	if(flagText || flagBinary)
+            	{
+            		if(controller_saveAsBinary("data.bin", listaPasajeros)==1)
+            		{
+            			flagSaveBinary = 1;// se guardo
+            		}
+            	}
+            	else
+            	{
+            		printf("\nPrimero debe cargar el archivo antes de guardar.");
+            	}
             	break;
+
             case 10:
-            	if(flagSave == 1)
+            	if(flagSaveText && flagSaveBinary)
             	{
             		printf("\nChau!");
             	}
             	else
             	{
-            		printf("\nPrimero debe guardar un archivo...");
+            		printf("\nPrimero debe guardar los pasajeros en archivo .csv y .bin...");
             	}
             	break;
         }
-    }while(option != 10 && flagSave == 0);
+    }while(option != 10 || !(flagSaveText == 1 && flagSaveBinary == 1));
     return 0;
 }
 

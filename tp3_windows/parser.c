@@ -55,12 +55,17 @@ int parser_PassengerFromBinary(FILE* pFile , LinkedList* pArrayListPassenger)
 {
 	Passenger* unPasajero;
 	Passenger auxPasajero;
-    int i = 0;
+
 
 	while(!feof(pFile))
 	{
 		unPasajero = Passenger_new();
 		fread(&auxPasajero,sizeof(Passenger),1,pFile);
+
+		if(feof(pFile))
+		{
+			break;
+		}
 
 		Passenger_setId(unPasajero, auxPasajero.id);
 		Passenger_setNombre(unPasajero, auxPasajero.nombre);
@@ -71,10 +76,9 @@ int parser_PassengerFromBinary(FILE* pFile , LinkedList* pArrayListPassenger)
 		Passenger_setStatusFlight(unPasajero, auxPasajero.estado);
 
        ll_add(pArrayListPassenger,unPasajero);
-       i++;
+
 
 	}
-	printf("\n Cantidad de iteraciones: %d",i);
 
     return 1;
 }
