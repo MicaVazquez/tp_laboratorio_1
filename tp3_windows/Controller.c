@@ -264,7 +264,7 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 	int id;
 	int flag = 0;
 	int auxId;
-	char confirmar;
+	char confirmar[5]= {" "};;
 	int retorno = 0;
 	Passenger* auxPasajero;
 
@@ -287,25 +287,27 @@ int controller_removePassenger(LinkedList* pArrayListPassenger)
 
 		if(flag == 1)
 		{
-			printf("\nID     Apellido   Nombre    Precio     Codigo de vuelo        Tipo de Pasajero\n");
+			printf("\nID   Nombre       Apellido      Precio    Tipo de Pasajero  Codigo de Vuelo    Estado de vuelo\n");
 			Passenger_printOne(auxPasajero);
 
-			printf("Dar de baja? [S|N]: ");
-			fflush(stdin);
-			scanf("%c",&confirmar);
-			confirmar = toupper(confirmar);
-
-			if(confirmar == 'S')
+			while((stricmp(confirmar,"si")) && (stricmp(confirmar,"no")))
 			{
-                ll_remove(pArrayListPassenger, i);
+				getString("\nDesea eliminar este empleado (ingrese si o no)?\n\n",confirmar,2,2);
+			}
+
+			if(stricmp(confirmar,"si")==0)
+			{
+				ll_remove(pArrayListPassenger,i);
+
 				printf("Se han borrado los datos...");
-				retorno = 1;
+
 			}
 			else
 			{
 				printf("No se han borrado los datos...");
 
 			}
+
 		}
     return retorno;
 }
@@ -363,12 +365,12 @@ int controller_sortPassenger(LinkedList* pArrayListPassenger)
 	int option;
 	int orden;
 
-	getInt("\nOrdenar por: 1.Nombre 2.Precio. Opcion: ", &option, 1, 2);
+	getInt("\nOrdenar por: \n1.Nombre \n2.Precio. \nOpcion: ", &option, 1, 2);
 
     switch(option)
     {
       case 1:
-          getNumero(&orden, "\nOrden...0.Descendente 1.Ascendente. Opcion: ", "Error.", 0, 1);
+          getNumero(&orden, "\nOrden...\n0.Descendente \n1.Ascendente. \nOpcion: ", "Error.", 0, 1);
     	  printf("\nOrdenando...espere un momento por favor.\n\n");
 
           ll_sort(pArrayListPassenger, Passenger_sortName, orden);
@@ -376,7 +378,7 @@ int controller_sortPassenger(LinkedList* pArrayListPassenger)
     	  printf("Ordenamiento terminado\n");
     	  break;
       case 2:
-    	  getNumero(&orden, "\nOrden...0.Descendente 1.Ascendente. Opcion: ", "Error.", 0, 1);
+    	  getNumero(&orden, "\nOrden...\n0.Descendente \n1.Ascendente. \nOpcion: ", "Error.", 0, 1);
     	  printf("\nOrdenando...espere un momento por favor.\n\n");
 
     	  ll_sort(pArrayListPassenger, Passenger_sortPrice, orden);

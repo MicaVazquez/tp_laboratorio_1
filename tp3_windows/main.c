@@ -18,9 +18,6 @@
      9. Guardar los datos de los pasajeros en el archivo data.csv (modo binario).
     10. Salir
 *****************************************************/
-//leer aclaraciones para verificar que falta
-//validacion confirmar-en baja
-
 
 int main()
 {
@@ -34,7 +31,7 @@ int main()
 
     LinkedList* listaPasajeros = ll_newLinkedList();
     do{
-    	getInt("\nMENU:\n1.Cargar datos de pasajeros desde el archivo-modo texto.\n2.Cargar datos de pasajero desde el archivo-modo binario\n3.Alta de pasajero\n4.Modificar datos de pasajeros.\n5.Baja de pasajeros\n6.Listar pasajeros\n7.Ordenar pasajeros\n8.Guardar datos(modo texto)\n9.Guardar datos(modo binario)\n10.Salir\n Opcion: ", &option, 1, 10);
+    	getInt("\nMENU:\n1.Cargar datos de pasajeros desde el archivo-modo texto.\n2.Cargar datos de pasajeros desde el archivo-modo binario\n3.Alta de pasajero\n4.Modificar datos de pasajeros.\n5.Baja de pasajeros\n6.Listar pasajeros\n7.Ordenar pasajeros\n8.Guardar datos(modo texto)\n9.Guardar datos(modo binario)\n10.Salir\n Opcion: ", &option, 1, 10);
         switch(option)
         {
             case 1:
@@ -154,6 +151,7 @@ int main()
             	if(flagSaveText && flagSaveBinary)
             	{
             		printf("\nChau!");
+            		ll_deleteLinkedList(listaPasajeros);
             	}
             	else
             	{

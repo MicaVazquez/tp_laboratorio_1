@@ -90,17 +90,32 @@ int Passenger_sortName(void* p1,void*p2);
  */
 int Passenger_sortPrice(void* p1,void* p2);
 /**
- * @brief
+ * @brief le da un valor entero al string estado de vuelo
  *
  * @param estadoVuelo
- * @return
+ * @return retorna un entero(1 En Horario, 2 Demorado,En Vuelo 3, 4 Aterrizado)
  */
 int Passenger_changeStatusFlight(char* estadoVuelo);
-
+/**
+ * @brief obtiene el maximo id guardado en un archivo
+ *
+ * @param id
+ * @return retorna si hubo exito 1 y 0 si no
+ */
 int Passenger_LastId(char* id);
-
+/**
+ * @brief  busca el id maximo en la linkedlist
+ *
+ * @param pArrayListPassenger
+ * @return retorna el id maximo
+ */
 int Passenger_buscarIdMax(LinkedList* pArrayListPassenger);
-
+/**
+ * @brief  guarda el id maximo encontado antes de guardar ewl archivo
+ *
+ * @param lastId
+ * @return retorna si hubo exito 1 y 0 si no
+ */
 int Passenger_saveLastId(int lastId);
 
 #endif /* PASSENGER_H_ */
